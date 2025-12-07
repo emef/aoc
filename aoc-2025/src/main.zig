@@ -7,6 +7,8 @@ pub const solutions = [_]aoc.Solution{
     @import("solutions/d3.zig").Solution,
     @import("solutions/d4.zig").Solution,
     @import("solutions/d5.zig").Solution,
+    @import("solutions/d6.zig").Solution,
+    @import("solutions/d7.zig").Solution,
 };
 
 pub fn main() !void {
@@ -55,17 +57,22 @@ pub fn main() !void {
     std.debug.print("---------------------\n", .{});
     var start = try std.time.Instant.now();
     try solution.part1(ctx1);
-    std.debug.print("took {d}ms\n", .{elapsedMs(start)});
+    printElapsed(start);
 
     std.debug.print("\n\n---------------------\n", .{});
     std.debug.print("part2:\n", .{});
     std.debug.print("---------------------\n", .{});
     start = try std.time.Instant.now();
     try solution.part2(ctx2);
-    std.debug.print("took {d}ms\n", .{elapsedMs(start)});
+    printElapsed(start);
 }
 
-fn elapsedMs(start: std.time.Instant) usize {
+fn printElapsed(start: std.time.Instant) void {
     const now = std.time.Instant.now() catch unreachable;
-    return now.since(start) / std.time.ns_per_ms;
+    const elapsed_ns = now.since(start);
+    if (elapsed_ns > 2 * std.time.ns_per_ms) {
+        std.debug.print("took {d}ms\n", .{elapsed_ns / std.time.ns_per_ms});
+    } else {
+        std.debug.print("took {d}us\n", .{elapsed_ns / std.time.ns_per_us});
+    }
 }
