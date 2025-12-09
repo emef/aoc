@@ -14,6 +14,8 @@ pub const Error = std.Io.Reader.StreamError ||
 pub const Context = struct {
     alloc: std.mem.Allocator,
     puzzle: []const u8,
+    part: Part,
+    sample: bool,
 };
 
 pub const Inputs = struct {

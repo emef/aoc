@@ -9,6 +9,8 @@ pub const solutions = [_]aoc.Solution{
     @import("solutions/d5.zig").Solution,
     @import("solutions/d6.zig").Solution,
     @import("solutions/d7.zig").Solution,
+    @import("solutions/d8.zig").Solution,
+    @import("solutions/d9.zig").Solution,
 };
 
 pub fn main() !void {
@@ -45,11 +47,15 @@ pub fn main() !void {
     const ctx1 = aoc.Context{
         .alloc = arena.allocator(),
         .puzzle = if (sample) solution.inputs.part1_sample else solution.inputs.part1,
+        .part = .part1,
+        .sample = sample,
     };
 
     const ctx2 = aoc.Context{
         .alloc = arena.allocator(),
         .puzzle = if (sample) solution.inputs.part2_sample else solution.inputs.part2,
+        .part = .part2,
+        .sample = sample,
     };
 
     std.debug.print("---------------------\n", .{});
