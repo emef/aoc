@@ -41,6 +41,29 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
 
+    const z3_path = "vendor/z3";
+
+    const z3_mod = b.addModule("z3", .{
+        .root_source_file = b.path("src/z3/root.zig"),
+        .target = target,
+    });
+    z3_mod.addIncludePath(b.path(z3_path ++ "/include"));
+
+    const z3_exe = b.addExecutable(.{
+        .name = "z3_example",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/z3/example.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+    });
+
+    z3_exe.root_module.addImport("z3", z3_mod);
+    z3_exe.root_module.addObjectFile(b.path(z3_path ++ "/bin/libz3.a"));
+    z3_exe.linkLibCpp();
+
+    b.installArtifact(z3_exe);
+
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
     // to the module defined above, it's sometimes preferable to split business
@@ -88,6 +111,10 @@ pub fn build(b: *std.Build) void {
     // step). By default the install prefix is `zig-out/` but can be overridden
     // by passing `--prefix` or `-p`.
     b.installArtifact(exe);
+
+    exe.root_module.addImport("z3", z3_mod);
+    exe.root_module.addObjectFile(b.path(z3_path ++ "/bin/libz3.a"));
+    exe.linkLibCpp();
 
     // This creates a top level step. Top level steps have a name and can be
     // invoked by name when running `zig build` (e.g. `zig build run`).

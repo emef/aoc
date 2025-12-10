@@ -9,6 +9,9 @@ pub const Error = std.Io.Reader.StreamError ||
         TODO,
         StreamTooLong,
         Unsupported,
+        QueueFull,
+        NoSolution,
+        NoSpaceLeft,
     };
 
 pub const Context = struct {

@@ -29,6 +29,9 @@ pub const d8_sample = @embedFile("d8_sample.txt");
 pub const d9 = @embedFile("d9.txt");
 pub const d9_sample = @embedFile("d9_sample.txt");
 
+pub const d10 = @embedFile("d10.txt");
+pub const d10_sample = @embedFile("d10_sample.txt");
+
 pub fn lines(alloc: std.mem.Allocator, buf: []const u8) ![][]const u8 {
     return split(alloc, buf, '\n');
 }
