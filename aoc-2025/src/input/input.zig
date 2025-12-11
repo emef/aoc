@@ -32,6 +32,10 @@ pub const d9_sample = @embedFile("d9_sample.txt");
 pub const d10 = @embedFile("d10.txt");
 pub const d10_sample = @embedFile("d10_sample.txt");
 
+pub const d11 = @embedFile("d11.txt");
+pub const d11_sample = @embedFile("d11_sample.txt");
+pub const d11_sample_part2 = @embedFile("d11_sample_part2.txt");
+
 pub fn lines(alloc: std.mem.Allocator, buf: []const u8) ![][]const u8 {
     return split(alloc, buf, '\n');
 }

@@ -19,8 +19,8 @@ fn part1(ctx: aoc.Context) aoc.Error!void {
 
     var sum: usize = 0;
     for (machines) |*machine| {
-        var queue = CyclicQueue(State, 10000).init();
-        try queue.enqueue(State.init(machine));
+        var queue = aoc.CyclicDeque(State, 10000).init();
+        try queue.append(State.init(machine));
 
         var arena = std.heap.ArenaAllocator.init(ctx.alloc);
         defer arena.deinit();
@@ -30,7 +30,7 @@ fn part1(ctx: aoc.Context) aoc.Error!void {
         defer seen.deinit();
 
         while (true) {
-            const state = queue.dequeue() orelse unreachable;
+            const state = queue.popFront() orelse unreachable;
             const state_key = state.hash_key();
             if (seen.contains(state_key)) {
                 continue;
@@ -44,7 +44,7 @@ fn part1(ctx: aoc.Context) aoc.Error!void {
             }
 
             for (state.permute().states) |next| {
-                try queue.enqueue(next);
+                try queue.append(next);
             }
         }
     }
@@ -131,49 +131,6 @@ fn solveZ3(alloc: std.mem.Allocator, machine: *const Machine, is_sample: bool) !
     }
 
     return error.NoSolution;
-}
-
-fn CyclicQueue(T: type, n: usize) type {
-    return struct {
-        const Self = @This();
-
-        buf: [n]T,
-        start: usize,
-        end: usize,
-        len: usize,
-
-        pub fn init() Self {
-            return Self{
-                .buf = undefined,
-                .start = 0,
-                .end = 0,
-                .len = 0,
-            };
-        }
-
-        pub fn enqueue(self: *Self, elem: T) !void {
-            if (self.len + 1 > self.buf.len) {
-                std.debug.print("stalled at {any} \n", .{elem});
-                return error.QueueFull;
-            }
-
-            const idx = self.end;
-            self.buf[idx] = elem;
-            self.end = @mod(self.end + 1, self.buf.len);
-            self.len += 1;
-        }
-
-        pub fn dequeue(self: *Self) ?T {
-            if (self.len == 0) {
-                return null;
-            }
-
-            const idx = self.start;
-            self.start = @mod(self.start + 1, self.buf.len);
-            self.len -= 1;
-            return self.buf[idx];
-        }
-    };
 }
 
 fn Permutations(T: type) type {
